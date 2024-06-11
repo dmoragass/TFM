@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Title and CSS styles for the StealthAddressModel application -->
+  <title>Demo Stealth Addresses</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin-left: 2%;
+      margin-right: 2%;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #00c614;
+      color: #fff;
+      text-align: left;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .account-info {
+      text-align: right;
+    }
+
+    .account-info p {
+      margin: 0;
+    }
+
+    .connect-button {
+      background-color: #ce6400;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .contract-info {
+      text-align: left;
+      margin-top: 20px;
+      padding: 0 20px;
+    }
+
+    .contract-info p {
+      margin: 5px 0;
+    }
+
+    .message-box {
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 20px 0;
+    }
+
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .message.error {
+      background-color: #ff7f7f;
+      color: #fff;
+    }
+
+    .message.info {
+      background-color: #f0f0f0;
+      color: #000;
+    }
+
+    .message.success {
+      background-color: #3fdf3f;
+      color: #171616;
+    }
+
+    .delete-button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .delete-button:hover {
+      background-color: #b0241a;
+    }
+
+    .main-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .column {
+      flex: 1;
+      text-align: center;
+    }
+
+    .sa-demo {
+      width: auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    .input-container {
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 96.5%;
+      padding: 5px;
+    }
+
+    button {
+      background-color: #0ba100;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #065300;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header section with application title and MetaMask connection info -->
+  <header>
+    <h1>Demo Stealth Addresses</h1>
+    <div class="account-info">
+      <p>Account Address: <strong id="accountAddress">...</strong></p>
+      <p>Account Balance: <strong id="accountBalance">...</strong> <strong>ETH</strong></p>
+      <button class="connect-button" onclick="App.connectMetaMask()">Connect MetaMask</button>
+    </div>
+  </header>
+
+  <!-- Message box for displaying notifications and errors -->
+  <div class="message-box" id="messageBox"></div>
+
+  <!-- Section displaying contract owner and address -->
+  <div class="contract-info">
+    <p>Contract owner: <strong id="contractOwner">...</strong></p>
+    <p>Contract address: <strong id="contractAddress">...</strong></p>
+    <button onclick="App.getContractInfo()">Get contract info</button>
+  </div>
+
+  <!-- Main container -->
+  <div class="main-container">
+    <div class="column">
+      <!-- Section for private key generation -->
+      <div class="sa-demo">
+        <h3>Generar clave privada</h3>
+        <button onclick="App.demoPrivateKey()">Generar</button>
+        <p id="democlavepriv"></p>
+      </div>
+
+      <!-- Section for public key generation -->
+      <div class="sa-demo">
+        <h3>Generar clave pública</h3>
+        <div class="input-container">
+          <input type="number" id="privKey" placeholder="Enter private key" />
+        </div>
+        <button onclick="App.demoPublicKey()">Generar</button>
+        <p id="democlavepubX"></p>
+        <p id="democlavepubY"></p>
+      </div>
+
+      <!-- Section for Stealth Meta Address generation -->
+      <div class="sa-demo">
+        <h3>Generar Stealth Meta-Address</h3>
+        <div class="input-container">
+          <input type="number" id="metaAddX" placeholder="Enter public key X" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="metaAddY" placeholder="Enter public key Y" />
+        </div>
+        <button onclick="App.demoStealthMetaAddress()">Generar</button>
+        <p id="stMetaAdd"></p>
+      </div>
+
+      <!-- Section for Stealth Meta Address uncompression -->
+      <div class="sa-demo">
+        <h3>Descomprimir Stealth Meta-Address</h3>
+        <div class="input-container">
+          <input type="text" id="prefix" placeholder="Enter prefix" />
+        </div>
+        <div class="input-container">
+          <input type="text" id="demoX" placeholder="Enter public key X" />
+        </div>
+        <button onclick="App.demoUncompressStealthMetaAddress()">Generar</button>
+        <p id="demometaclavepubX"></p>
+        <p id="demometaclavepubY"></p>
+      </div>
+
+      <!-- Section for Stealth Address generation -->
+      <div class="sa-demo">
+        <h3>Generar Stealth Address</h3>
+        <div class="input-container">
+          <input type="number" id="sapriv" placeholder="Enter private key" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="sapubX" placeholder="Enter public key X" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="sapubY" placeholder="Enter public key Y" />
+        </div>
+        <button onclick="App.demoGenerateStealthAddress()">Generar</button>
+        <p id="demostealthaddress"></p>
+        <p id="demoviewtag"></p>
+      </div>
+    </div>
+
+    <div class="column">
+      <!-- Section for random data addition -->
+      <div class="sa-demo">
+        <h3>Añadir datos aleatorios</h3>
+        <button onclick="App.demoRellenarRandom()">Añadir</button>
+        <p id="demorellenar"></p>
+      </div>
+
+      <!-- Section for specific data addition -->
+      <div class="sa-demo">
+        <h3>Añadir datos específicos</h3>
+        <div class="input-container">
+          <input type="number" id="addpriv" placeholder="Enter private key" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="addpubX" placeholder="Enter public key X" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="addpubY" placeholder="Enter public key Y" />
+        </div>
+        <div class="input-container">
+          <input type="text" id="addsa" placeholder="Enter stealth address" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="addviewtag" placeholder="Enter view tag" />
+        </div>
+        <button onclick="App.demoRellenarEspecifico()">Añadir</button>
+        <p id="demorellenarb"></p>
+      </div>
+
+      <!-- Section for Stealth Address search -->
+      <div class="sa-demo">
+        <h3>Buscar Stealth Address</h3>
+        <div class="input-container">
+          <input type="number" id="parsepriv" placeholder="Enter private key" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="parsepubX" placeholder="Enter public key X" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="parsepubY" placeholder="Enter public key Y" />
+        </div>
+        <button onclick="App.demoParse()">Buscar</button>
+        <p id="demoparse"></p>
+        <p id="demoparseb"></p>
+      </div>
+
+      <!-- Section for Stealth Address private key generation -->
+      <div class="sa-demo">
+        <h3>Generar clave privada de Stealth Address</h3>
+        <div class="input-container">
+          <input type="number" id="retpriv" placeholder="Enter private key" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="rethash" placeholder="Enter hash" />
+        </div>
+        <button onclick="App.demoPrivStA()">Generar</button>
+        <p id="demoret"></p>
+      </div>
+    </div>      
+  </div>
+
+  <!-- Link to the JavaScript file for application logic -->
+  <script src="index.js"></script>
+</body>
+
+</html>

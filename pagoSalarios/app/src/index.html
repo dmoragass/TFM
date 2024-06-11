@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Title and CSS styles for the PagoSalariosSmartContract application -->
+  <title>Pago de salarios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin-left: 2%;
+      margin-right: 2%;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background-color: #006eb8;
+      color: #fff;
+      text-align: left;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .account-info {
+      text-align: right;
+    }
+
+    .account-info p {
+      margin: 0;
+    }
+
+    .connect-button {
+      background-color: #f17800;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .contract-info {
+      text-align: left;
+      margin-top: 20px;
+      padding: 0 20px;
+    }
+
+    .contract-info p {
+      margin: 5px 0;
+    }
+
+    .message-box {
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 20px 0;
+    }
+
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .message.error {
+      background-color: #ff7f7f;
+      color: #fff;
+    }
+
+    .message.info {
+      background-color: #f0f0f0;
+      color: #000;
+    }
+
+    .message.success {
+      background-color: #3fdf3f;
+      color: #171616;
+    }
+
+    .delete-button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .delete-button:hover {
+      background-color: #b0241a;
+    }
+
+    .main-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .column {
+      flex: 1;
+      text-align: center;
+    }
+
+    .pago-salarios {
+      width: auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+
+    .input-container {
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 96.5%;
+      padding: 5px;
+    }
+
+    select {
+      width: 100%;
+      padding: 5px;
+    }
+
+    button {
+      background-color: #007bcd;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005690;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header section with application title and MetaMask connection info -->
+  <header>
+    <h1>Pago de salarios</h1>
+    <div class="account-info">
+      <p>Account Address: <strong id="accountAddress">...</strong></p>
+      <p>Account Balance: <strong id="accountBalance">...</strong> <strong>ETH</strong></p>
+      <button class="connect-button" onclick="App.connectMetaMask()">Connect MetaMask</button>
+    </div>
+  </header>
+
+  <!-- Message box for displaying notifications and errors -->
+  <div class="message-box" id="messageBox"></div>
+
+  <!-- Section displaying contract owner and address -->
+  <div class="contract-info">
+    <p>Contract owner: <strong id="contractOwner">...</strong></p>
+    <p>Contract address: <strong id="contractAddress">...</strong></p>
+    <button onclick="App.getContractInfo()">Get contract info</button>
+  </div>
+
+  <!-- Main container -->
+  <div class="main-container">
+    <div class="column">
+      <!-- Form for registering a new employee -->
+      <div class="pago-salarios">
+        <h3>Dar de alta a un empleado</h3>
+        <div class="input-container">
+          <input type="text" id="direccion" placeholder="Introduce la dirección del empleado" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="salario" placeholder="Introduce el salario del empleado" />
+        </div>
+        <button onclick="App.altaEmpleado()">Dar de alta</button>
+        <p id="alta"></p>
+      </div>    
+
+      <!-- Section for generating stealth addresses and pay employees' salaries -->
+      <div class="pago-salarios">
+        <h3>Generar stealth addresses y pagar a todos los empleados</h3>
+        <button onclick="App.generarStealth()">Generar y pagar</button>
+        <p id="genStealth"></p>
+      </div>
+
+      <!-- Form for generating a stealth address and pay employee's salary -->
+      <div class="pago-salarios">
+        <h3>Generar stealth address y pagar a un empleado</h3>
+        <div class="input-container">
+          <input type="text" id="empleado" placeholder="Dirección del empleado" />
+        </div>
+        <div class="input-container">
+          <input type="number" id="cantidad" placeholder="Cantidad a pagar" />
+        </div>
+        <button onclick="App.generarStealthUnique()">Generar y pagar</button>
+        <p id="genStealthUnique"></p>
+      </div>
+
+      <!-- Section for checking the total amount of employees' salaries -->
+      <div class="pago-salarios">
+        <h3>Consulta de salarios</h3>
+        <button onclick="App.getSalarios()">Obtener total</button>
+        <p id="totalSalarios"></p>
+      </div>      
+    </div>
+
+    <div class="column">
+      <!-- Section for generating keys -->
+      <div class="pago-salarios">
+        <h3>Generar claves</h3>
+        <button onclick="App.generarClaves()">Generar</button>
+        <p id="claves"></p>
+      </div>
+
+      <!-- Section for checking generated keys -->
+      <div class="pago-salarios">
+        <h3>Consultar claves</h3>
+        <button onclick="App.consultarClaves()">Consultar</button>
+        <p id="clavePrivada"></p>
+        <p id="clavePublicaX"></p>
+        <p id="clavePublicaY"></p>
+      </div>
+
+      <!-- Section for checking last generated stealth address -->
+      <div class="pago-salarios">
+        <h3>Consultar stealth address</h3>
+        <button onclick="App.consultarStealth()">Consultar</button>
+        <p id="stealthConsultaHash"></p>
+        <p id="stealthConsultaDir"></p>
+      </div>
+
+      <!-- Form for checking the stealth address balace -->
+      <div class="pago-salarios">
+        <h3>Consultar balance</h3>
+        <div class="input-container">
+          <input type="text" id="stealthEmpleado" placeholder="Stealth address del empleado" />
+        </div>
+        <button onclick="App.consultarBalance()">Consultar</button>
+        <p id="balance"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link to the JavaScript file for application logic -->
+  <script src="index.js"></script>
+</body>
+
+</html>
